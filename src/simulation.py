@@ -1,4 +1,4 @@
-from __future__ import  annotations
+from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,7 +17,7 @@ from src.motor_model import (
 
 
 @dataclass(frozen=True)
-class SimulationConfg:
+class SimulationConfig:
     """Configurações gerais da simulação."""
 
     sample_time: float = 0.01
@@ -42,26 +42,28 @@ class SimulationResult:
     control_voltage: np.ndarray
     disturbance_torque: np.ndarray
 
+
 def run_simulation(
-        config: SimulationConfg,
-        motor_parameters: MotorParameters | None = None,
+    config: SimulationConfig,
+    motor_parameters: MotorParameters | None = None,
 ) -> SimulationResult:
-    """Executa a Simulação em malha fechada."""
+    """Executa a simulação em malha fechada."""
+
     parameters = (
         motor_parameters
         or MotorParameters()
     )
-    
+
     plant = RobotJointPlant(
         parameters=parameters,
-        sample_time=config.sample_time
+        sample_time=config.sample_time,
     )
 
     controller = FuzzyPositionController(
-        error_scale= 3.0,
+        error_scale=3.0,
         derivative_scale=0.10,
-        output_scale= config.voltage_limit,
-        voltage_limit =config.voltage_limit
+        output_scale=config.voltage_limit,
+        voltage_limit=config.voltage_limit,
     )
 
     time = np.arange(
@@ -72,7 +74,7 @@ def run_simulation(
     )
 
     reference = np.full_like(
-        time, 
+        time,
         config.reference,
         dtype=float,
     )
@@ -80,19 +82,26 @@ def run_simulation(
     position = np.zeros_like(time)
     velocity = np.zeros_like(time)
     error_history = np.zeros_like(time)
-    control_voltage = np.zeross_like(time)
-    disturbance_history = np.zeros_likes(times)
+    control_voltage = np.zeros_like(time)
+    disturbance_history = np.zeros_like(time)
 
     previous_error = (
+        config.reference
+        - plant.theta
+    )
+
+    error_history[0] = previous_error
+
+    disturbance_end = (
         config.disturbance_start
         + config.disturbance_duration
     )
-    
-    for index in range (
+
+    for index in range(
         1,
         len(time),
     ):
-        interval_time = time[index -1]
+        interval_time = time[index - 1]
 
         error = (
             config.reference
@@ -118,11 +127,11 @@ def run_simulation(
             )
         else:
             disturbance = 0.0
-        
-        theta, omega, _current =  plant.step(
+
+        theta, omega, _current = plant.step(
             voltage=voltage,
             disturbance_torque=disturbance,
-        ) 
+        )
 
         position[index] = theta
         velocity[index] = omega

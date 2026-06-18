@@ -7,6 +7,7 @@ class MotorParameters:
     
     inertia: float = 0.01
     viscous_friction: float = 0.10
+    torque_constant: float = 0.01
     back_emf_constant: float = 0.01
     resistance: float = 1.0
 

@@ -138,7 +138,7 @@ class FuzzyPositionController:
             error_scale: float = 3.0,
             derivative_scale: float = 0.10,
             output_scale: float = 12.0,
-            valtage_limit: float = 12.0,
+            voltage_limit: float = 12.0,
         ) -> None:
             if voltage_limit <= 0:
                 raise ValueError(
@@ -148,7 +148,7 @@ class FuzzyPositionController:
             self.error_scale = error_scale
             self.derivative_scale = derivative_scale
             self.output_scale = output_scale
-            self.voltage_limit = self.voltage_limit
+            self.voltage_limit = voltage_limit
         
     @staticmethod
     def memberships(

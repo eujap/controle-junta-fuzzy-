@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class MotorParameters:
     """Parametros físicos do motor DC e junta robótica."""
     
-    inertia: float = 0.01
+    inertia: float = 0.015
     viscous_friction: float = 0.10
     torque_constant: float = 0.01
     back_emf_constant: float = 0.01

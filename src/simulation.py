@@ -29,6 +29,11 @@ class SimulationConfig:
     disturbance_duration: float = 0.2
     disturbance_torque: float = -0.08
 
+    # Parâmetros de sintonia do controlador fuzzy
+    controller_error_scale: float = 3.0
+    controller_derivative_scale: float = 0.10
+    controller_output_scale: float = 12.0
+
 
 @dataclass
 class SimulationResult:
@@ -60,11 +65,11 @@ def run_simulation(
     )
 
     controller = FuzzyPositionController(
-        error_scale=3.0,
-        derivative_scale=0.10,
-        output_scale=config.voltage_limit,
-        voltage_limit=config.voltage_limit,
-    )
+    error_scale=config.controller_error_scale,
+    derivative_scale=config.controller_derivative_scale,
+    output_scale=config.controller_output_scale,
+    voltage_limit=config.voltage_limit,
+)
 
     time = np.arange(
         0.0,

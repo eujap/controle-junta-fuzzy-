@@ -14,11 +14,19 @@ from src.simulation import (
     save_plots,
 )
 
+from src.fuzzy_visualization import (
+    generate_fuzzy_visualizations,
+)
+
 
 def main() -> None:
     """Ponto de entrada do projeto."""
 
-    config = SimulationConfig()
+    config = SimulationConfig(
+    controller_error_scale=4.0,
+    controller_derivative_scale=0.20,
+    controller_output_scale=12.0,
+)
 
     motor_parameters = MotorParameters()
 
@@ -60,6 +68,11 @@ def main() -> None:
         output_directory="results",
         show_plots=True,
     )
+
+    generate_fuzzy_visualizations(
+    output_directory="results",
+    show_plots=True,
+)
 
 
 if __name__ == "__main__":

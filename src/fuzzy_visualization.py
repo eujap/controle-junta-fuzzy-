@@ -20,7 +20,12 @@ def plot_membership_functions(
         exist_ok=True,
     )
 
-    controller = FuzzyPositionController()
+    controller = FuzzyPositionController(
+        error_scale=4.0,
+        derivative_scale=0.20,
+        output_scale=12.0,
+        voltage_limit=12.0,
+    )
 
     values = np.linspace(
         -1.0,
@@ -98,16 +103,16 @@ def plot_control_surface(
     # Como error_scale = 3, erros próximos de ±0,34 rad
     # já atingem os extremos normalizados ±1.
     error_values = np.linspace(
-        -0.4,
-        0.4,
+        -0.30,
+        0.30,
         80,
     )
 
     # Como derivative_scale = 0,10,
     # derivadas de ±10 rad/s atingem ±1.
     derivative_values = np.linspace(
-        -10.0,
-        10.0,
+        -5.0,
+        5.0,
         80,
     )
 
